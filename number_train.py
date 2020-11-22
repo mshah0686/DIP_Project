@@ -30,6 +30,7 @@ print('    x_train shape:', x_train.shape)
 print('    Number of images in x_train', x_train.shape[0])
 print('    Number of images in x_test', x_test.shape[0])
 
+# Building the model
 print('=> Building Model...')
 model = Sequential()
 model.add(Conv2D(28, kernel_size=(3,3), input_shape=input_shape))
@@ -46,6 +47,8 @@ print('=> Training model...')
 model.compile(optimizer='adam', 
                 loss='sparse_categorical_crossentropy', 
                 metrics=['accuracy'])
+# Training model
+# TODO: Use validation set
 model.fit(x=x_train,y=y_train, epochs=1)
 
 print('=> Evaluate model...')
@@ -57,4 +60,3 @@ model.save('model_data/model_ver_0')
 # To Load the model do this:
 # new_model = tf.keras.models.load_model('model_data/model_ver_0')
 # new_model.summary()
-

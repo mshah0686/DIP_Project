@@ -22,7 +22,7 @@ def localizeEquation(img):
     overlay_image = cv2.cvtColor(overlay_image, cv2.COLOR_BGR2RGB)
     for c in contours:
         area = cv2.contourArea(c)
-        if(area > 30):
+        if(area > 15):
             (x,y,w,h) = cv2.boundingRect(c)
             cv2.rectangle(overlay_image, (x,y), (x+w, y+h), (255, 0, 0), 2)
             sub_image = img[y:y+h, x:x+w]

@@ -1,17 +1,17 @@
 TODO List:
--> Train model with +, -, * and /
+-> Train model with +, -, * and /: Malav and Kenneth
     -> Gather images (maybe the data set)
     -> Combine with MNIST image or build seperate model?
     -> Think about bias? A lot of MNIST images and little symbol data?
         -> Maybe cut down on MNIST images to settle bias?
--> Gather equations image to test on
+-> Gather equations image to test on: Backtrack
     -> Label them properly, have a truth data file with it (with answer and classification array)
         eg. test_image_23434.jpg test_truth_23434.json??
         -> The truth file would have: all digits (in order of appearance) and the answer
         -> Do we wanna use json? or txt?
         -> the 23434 should be a UUID for each set of image and truth
     -> Implement code to run through each image and get an accuary answer
--> Build equation solver
+-> Build equation solver: Vignesh
     -> easiest thing: Given an array of digits and characters, solve the equation
     -> probably just a method with array input
 -> Report stuff

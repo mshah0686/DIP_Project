@@ -1,0 +1,40 @@
+TODO List:
+-> Train model with +, -, * and /
+    -> Gather images (maybe the data set)
+    -> Combine with MNIST image or build seperate model?
+    -> Think about bias? A lot of MNIST images and little symbol data?
+        -> Maybe cut down on MNIST images to settle bias?
+-> Gather equations image to test on
+    -> Label them properly, have a truth data file with it (with answer and classification array)
+        eg. test_image_23434.jpg test_truth_23434.json??
+        -> The truth file would have: all digits (in order of appearance) and the answer
+        -> Do we wanna use json? or txt?
+        -> the 23434 should be a UUID for each set of image and truth
+    -> Implement code to run through each image and get an accuary answer
+-> Build equation solver
+    -> easiest thing: Given an array of digits and characters, solve the equation
+    -> probably just a method with array input
+-> Report stuff
+    -> Gather images to put in report: whats working, what isn't (especially different filters)
+    -> Write a lot in the notes -> esp about image processing and ML to write in report
+
+
+
+NOTES: Observations and shit we learned to write in report:
+1. To many iterations of erosion => To many contours found
+2. Training ML model: Ran with 10 epochs and 200 batch size for better accuracy
+    -> originally doing 2 epochs, even though really high accuracy really bad predictions in practice
+    -> Still problem of misclassifying an empty area with a digit bc the model predicts any input as something
+3. Contour detection: a lot of problems, need a better noise removal
+4. Filtering:
+    -> Increasing the size of the image greatly increased performance in finding contours: allowed filtering by contour area to be more effective
+    -> Erosion: makes the digits broader but the noise is also amplified
+    -> Bilateral: Not doing much at the end
+    -> Dilation: Does really good job of removing noise but also removes a lot of the digit areas
+    -> Doing too many actually introduced noise or took away information: resulted to just threshold on adaptive setting
+5. Smart filtering: Find areas of contours after thresholding, and remove the noise around iterations  
+    -> This is kinda stupid, you just find contours twice. Might as well just pass them forward
+
+
+
+

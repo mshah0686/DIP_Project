@@ -25,10 +25,17 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
+#Create Validation set
+x_val = x_train[-10000:]
+y_val = y_train[-10000:]
+x_train = x_train[:-10000]
+y_train = y_train[:-10000]
+
 print("=> Dataset data....")
 print('    x_train shape:', x_train.shape)
 print('    Number of images in x_train', x_train.shape[0])
 print('    Number of images in x_test', x_test.shape[0])
+print('    Number of images in x_val', x_val.shape[0])
 
 # Building the model
 print('=> Building Model...')
@@ -46,16 +53,17 @@ print('=> Training model...')
 
 model.compile(optimizer='adam', 
                 loss='sparse_categorical_crossentropy', 
-                metrics=['accuracy'])
+                metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
 # Training model
 # TODO: Use validation set
-model.fit(x=x_train,y=y_train, epochs=1)
+model.fit(x=x_train,y=y_train, batch_size=64, epochs=2, validation_data=(x_val, y_val))
 
 print('=> Evaluate model...')
 model.evaluate(x_test, y_test)
 
 print('=> Saving model...')
 model.save('model_data/model_ver_0')
+
 
 # To Load the model do this:
 # new_model = tf.keras.models.load_model('model_data/model_ver_0')

@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import pre_process
 import imutils
+import tensorflow as tf
 
 '''
 Main file:
@@ -12,33 +13,60 @@ Main file:
 -> Return solution
 '''
 
-def findSodukuLocation(img):
-    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    contours = imutils.grab_contours(contours)
-    contours = sorted(contours, key=cv2.contourArea, reverse=True)
+def localizeEquation(img):
+    contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    unprocessed_digits = []
 
-    puzzle_boundary_countour = None
-
-    for c in contours:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        if len(approx) == 4:
-            puzzleCnt = approx
-            break
-    
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     overlay_image = img.copy()
-    print(puzzleCnt)
-    cv2.drawContours(overlay_image, [puzzleCnt], -1, (255, 0, 0), 3)
-    cv2.imshow("Original", img)
     overlay_image = cv2.cvtColor(overlay_image, cv2.COLOR_BGR2RGB)
-    cv2.imshow("Puzzle Outline", overlay_image)
+    for c in contours:
+        area = cv2.contourArea(c)
+        if(area > 50):
+            (x,y,w,h) = cv2.boundingRect(c)
+            cv2.rectangle(overlay_image, (x,y), (x+w, y+h), (255, 0, 0), 2)
+            sub_image = img[y:y+h, x:x+w]
+            #cv2.imshow("Area of interest", sub_image)
+            max_dimen = max(sub_image.shape[0], sub_image.shape[1]) + 10
+            x_pad = ((max_dimen - sub_image.shape[0]) // 2)
+            y_pad = ((max_dimen - sub_image.shape[1]) // 2) 
+            sub_image = np.pad(sub_image, ((x_pad,x_pad), (y_pad,y_pad)), "constant", constant_values=0)
+            sub_image= cv2.bitwise_not(sub_image)
+            sub_image = cv2.resize(sub_image, (28, 28))
+            cv2.imshow("Area of interest", sub_image)
+            cv2.waitKey(0)
+            unprocessed_digits.append(sub_image)
+    cv2.imshow("Rectangle", overlay_image)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    return [puzzleCnt]
-
+    return unprocessed_digits
 
 if __name__ == "__main__":
-    img = cv2.imread('sudoku_sample.jpg',0)
+    print("Reading Image")
+    img = cv2.imread('sample2.jpg',0)
+    img = imutils.resize(img, height = 200, width=200)
+    print("Doing pre processing")
     img = pre_process.process_pipeline(img)
-    findSodukuLocation(img)
+    areas_of_interest = np.asarray(localizeEquation(img))
+
+    print("Found Areas of Interest: ", len(areas_of_interest))
+
+    #Machine Learning Part
+    print("Starting Machine Learning Part")
+    #Reshape data
+    print(areas_of_interest)
+    x_test = areas_of_interest.reshape(areas_of_interest.shape[0], 28, 28, 1)
+    x_test = x_test.astype('float32')
+    x_test /= 255
+
+    # load model
+    digit_model = tf.keras.models.load_model('model_data/model_ver_0')
+    digit_model.summary()
+
+    #predict on those two areas
+    print("Running prediction")
+    predictions = digit_model.predict(x_test)
+    print("Predictions: ", predictions)
+    for p in predictions:
+        max_index = np.argmax(p)
+        max_val = np.max(p)
+        if(max_val * 100 > 50):
+            print("Predicted: ", max_index)

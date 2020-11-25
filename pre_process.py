@@ -23,14 +23,17 @@ Gaussian Blur: cv2.GaussianBlur(img,(5,5),0)
 
 def process_pipeline(img):
     #ret, img = cv2.threshold(img,90,255,cv2.THRESH_BINARY)
+    #img = cv2.GaussianBlur(img,(3,3),0)
     img = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
     kernel = np.ones((2,2),np.uint8)
     #img = cv2.dilate(img,kernel,iterations = 1)
-    #img = cv2.erode(img,kernel,iterations = 1)
+    img = cv2.erode(img,kernel,iterations = 1)
     #img = cv2.dilate(img,kernel,iterations = 1)
-    #img = cv2.GaussianBlur(img,(5,5),0)
     #ret, img = cv2.threshold(img,230,255,cv2.THRESH_BINARY)
     img = cv2.bitwise_not(img)
+    img = cv2.bilateralFilter(img,9,20,75)
+    #img = cv2.medianBlur(img,3)
+    #img = cv2.dilate(img,kernel,iterations = 1)
     return img
 
 if __name__ == "__main__":

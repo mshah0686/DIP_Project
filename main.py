@@ -30,7 +30,6 @@ def localizeEquation(img):
             x_pad = ((max_dimen - sub_image.shape[0]) // 2)
             y_pad = ((max_dimen - sub_image.shape[1]) // 2) 
             sub_image = np.pad(sub_image, ((x_pad,x_pad), (y_pad,y_pad)), "constant", constant_values=0)
-            sub_image= cv2.bitwise_not(sub_image)
             sub_image = cv2.resize(sub_image, (28, 28))
             cv2.imshow("Area of interest", sub_image)
             cv2.waitKey(0)
@@ -41,7 +40,7 @@ def localizeEquation(img):
 
 if __name__ == "__main__":
     print("Reading Image")
-    img = cv2.imread('sample2.jpg',0)
+    img = cv2.imread('sample.jpg',0)
     img = imutils.resize(img, height = 200, width=200)
     print("Doing pre processing")
     img = pre_process.process_pipeline(img)

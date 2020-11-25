@@ -56,13 +56,13 @@ model.compile(optimizer='adam',
                 metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
 # Training model
 # TODO: Use validation set
-model.fit(x=x_train,y=y_train, batch_size=64, epochs=2, validation_data=(x_val, y_val))
+model.fit(x=x_train,y=y_train, batch_size=200, epochs=10, shuffle=True,validation_data=(x_val, y_val))
 
 print('=> Evaluate model...')
 model.evaluate(x_test, y_test)
 
 print('=> Saving model...')
-model.save('model_data/model_ver_0')
+model.save('model_data/model_ver_1')
 
 
 # To Load the model do this:

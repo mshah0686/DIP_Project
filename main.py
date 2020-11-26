@@ -47,7 +47,7 @@ def localizeEquation(img):
 
 if __name__ == "__main__":
     print("Reading Image")
-    img = cv2.imread('sample3.jpg',0)
+    img = cv2.imread('sample4.jpg',0)
     img = imutils.resize(img, height = 400, width=400)
     print("Doing pre processing")
     img = pre_process.process_pipeline(img)
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     x_test /= 255
 
     # load model
-    digit_model = tf.keras.models.load_model('model_data/model_ver_0')
+    digit_model = tf.keras.models.load_model('model_data/model_ver_1')
     digit_model.summary()
 
     #predict on those two areas
